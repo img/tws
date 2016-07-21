@@ -16,7 +16,7 @@ U.S. Government Users Restricted Rights:  Use, duplication or disclosure restric
     <title>Trivial Web Service</title>
     <script>
        
-       var SERVICE_URL="https://greenfront.edinburgh.uk.ibm.com:8888/";
+       var SERVICE_URL="https://greenfront.edinburgh.uk.ibm.com:9444/";
     </script>
 
     <script src="https://code.jquery.com/jquery-1.9.1.js"></script>

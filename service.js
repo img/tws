@@ -17,12 +17,15 @@ function handleSelection(ref) {
   params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.TEXT;
   
   // This parameter indicates that RM proxy should pass on the SSO token
-  params["AUTHORIZATION"]="SSO";
+    params[gadgets.io.RequestParameters.AUTHORIZATION]="SSO";
+    params[gadgets.io.RequestParameters.HEADERS] = {"OSLC-Core-Version":"2.0",
+                                                    "Accept": "application/rdf+xml"
+                                                   }
   
   var url = ref[0].uri;
 
   // SERVICE_URL is defined in the gadget.xml file in a separate script tag
-  var service = SERVICE_URL+"?artifact="+url;
+  var service = url;
   gadgets.io.makeRequest(service, responseHandler, params);
   setStatus("Request has been sent to remote service", "running");
 };
