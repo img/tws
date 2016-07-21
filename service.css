@@ -1,0 +1,32 @@
+/*
+ Licensed Materials - Property of IBM
+© Copyright IBM Corporation 2014
+
+U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. 
+*/
+
+body {
+	font-size: 12px;
+}
+
+.serviceResult{
+	margin-left: 5px;
+	margin-right: 5px;
+	padding: 5px;
+	border-radius: 5px;
+	border: 1px solid black;
+	word-wrap: break-word;
+	background-color: #FFFFCC;
+}
+
+.serviceResult.running{
+	background-color: #FFFF99;
+}
+
+.serviceResult.success{
+	background-color: #66FF66;
+}
+
+.serviceResult.failed {
+	background-color: #DD8888;
+}

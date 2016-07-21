@@ -1,0 +1,36 @@
+<!--
+ Licensed Materials - Property of IBM
+© Copyright IBM Corporation 2014
+
+U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. 
+-->
+<Module specificationVersion="2.0">
+<ModulePrefs title="Trivial Web Service" height="200" scrolling="true">
+<Require feature="com.ibm.rdm.rm.api"/>
+<Require feature="dynamic-height"/>
+</ModulePrefs>
+<Content type="html">
+<![CDATA[
+	<html>
+  <head>
+    <title>Trivial Web Service</title>
+    <script>
+       
+       var SERVICE_URL="https://greenfront.edinburgh.uk.ibm.com:8888/";
+    </script>
+
+    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="service.js"></script>
+    <link rel="stylesheet" type="text/css" href="service.css">
+  </head>
+  
+   <body>
+   	Select an artifact and this extension will use an external web service to fetch its OSLC representation.
+   	<br/>
+   	<br/>
+    <div id="result" class="serviceResult" >Waiting for artifact selection..</div>
+  </body>  
+</html>
+]]>
+</Content>
+</Module>
