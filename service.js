@@ -154,6 +154,9 @@ function createArtefactUsingOSLCAPI(cb) {
     var instanceShapeURI = "https://greenfront.edinburgh.uk.ibm.com:9444/rdm/types/_6af28VcuEeaRs6jX1n_-EA";
 
 
+    var folderURI = "https://greenfront.edinburgh.uk.ibm.com:9444/rdm/folders/_-Y7wEVobEeaL4siZfM2eLQ";
+
+
   var params = {};  
   params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.TEXT;
   
@@ -163,9 +166,10 @@ function createArtefactUsingOSLCAPI(cb) {
     params[gadgets.io.RequestParameters.HEADERS] = {"OSLC-Core-Version":"2.0",
                                                     "Content-Type": "application/rdf+xml"
                                                    };
-    var content = "<rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'    xmlns:dcterms='http://purl.org/dc/terms/'    xmlns:oslc='http://open-services.net/ns/core#'    xmlns:oslc_rm='http://open-services.net/ns/rm#'    xmlns:jazz_rm='http://jazz.net/ns/rm#'   xmlns:xhtml='http://www.w3.org/1999/xhtml'>  <oslc_rm:Requirement rdf:about=''><dcterms:title rdf:parseType='Literal'> Signal frequency triggering</dcterms:title>        <jazz_rm:primaryText rdf:parseType='Literal'> <div xmlns='http://www.w3.org/1999/xhtml'>Signal frequency triggering <strong>shall</strong> be compliant with ISO-7488-II Part 4. </div></jazz_rm:primaryText><oslc:instanceShape rdf:resource='{instanceShapeURI}'/></oslc_rm:Requirement></rdf:RDF>";
+    var content = "<rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'    xmlns:nav='http://jazz.net/ns/rm/navigation#' xmlns:dcterms='http://purl.org/dc/terms/'    xmlns:oslc='http://open-services.net/ns/core#'    xmlns:oslc_rm='http://open-services.net/ns/rm#'    xmlns:jazz_rm='http://jazz.net/ns/rm#'   xmlns:xhtml='http://www.w3.org/1999/xhtml'>  <oslc_rm:Requirement rdf:about=''><dcterms:title rdf:parseType='Literal'> Signal frequency triggering</dcterms:title>        <jazz_rm:primaryText rdf:parseType='Literal'> <div xmlns='http://www.w3.org/1999/xhtml'>Signal frequency triggering <strong>shall</strong> be compliant with ISO-7488-II Part 4. </div></jazz_rm:primaryText><oslc:instanceShape rdf:resource='{instanceShapeURI}'/><nav:parent rdf:resource='{folderURI}'/></oslc_rm:Requirement></rdf:RDF>";
 
     content = content.replace(new RegExp("{instanceShapeURI}", "g"), instanceShapeURI);
+    content = content.replace(new RegExp("{folderURI}", "g"), folderURI);
     params[gadgets.io.RequestParameters.POST_DATA] = content;
 
   
