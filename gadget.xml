@@ -29,6 +29,9 @@ U.S. Government Users Restricted Rights:  Use, duplication or disclosure restric
    	<br/>
    	<br/>
     <div id="result" class="serviceResult" >Waiting for artifact selection..</div>
+<p>
+<button id="create">Press to create a requirement using the OSLC RM API</button>
+<a id="artefact" target="_blank">Click to open</a>
   </body>  
 </html>
 ]]>

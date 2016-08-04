@@ -9,6 +9,7 @@
 // On selection event, take the first of the selected items
 // and invoke the TrivialWebService on it
 function handleSelection(ref) {
+    console.log("Selection event");
   if(!ref || ref.length == 0){
 	return;
   }
@@ -104,6 +105,38 @@ function responseHandler(resp) {
     setStatus("Request completed. Result is :<br/>"+html, status);
 };
 
+/*
+ * Handler for the result returned from the TrivialWebService
+ * 
+ * The response varies in form depending on whether there is a success or failure
+ *  For Success the response is rdf/xml which needs escaping so it can be displayed
+ *  For Failure the response is an html fragment that can be displayed directly
+ */
+function oslcCreationHandler(cb, resp) {  
+    var uri_of_created_resource;
+	var html =  resp.text;
+	var status = "failed";
+    console.log("oslcCreationHandler");
+    console.log(resp);
+	// 200==Good Result, so escape rdf xml
+	if (resp.rc==201)
+	{
+	    html = html.replace(/&/g,"&amp;");
+	    html = html.replace(/</g,"&lt;");
+	    html = html.replace(/>/g,"&gt;");
+        uri_of_created_resource = resp.headers.location[0];
+	    status="success";
+	}
+	else
+	{
+	    status="failed";
+	}
+    setStatus("Request completed. Result is :<br/>"+html, status);
+    cb(uri_of_created_resource);
+};
+
+
+
 // Update the status in the UI
 // Status should be one of "running", "success", "failed"
 function setStatus(msg, status){
@@ -111,6 +144,44 @@ function setStatus(msg, status){
 	domNode.className="serviceResult "+status;
 	domNode.innerHTML = msg;
 }
+
+function createArtefactUsingOSLCAPI(cb) {
+    // instanceShapeURI is discovered from the ServiceProvider, available from the OSLC Catalog.  The entry point
+    // is declared in the /rootservices document; see the oslc_rm:rmServiceProviders resource in that RDF.
+    // Each ServiceProvider has a CreationFactory for requirements (and also collections).  Use the instanceShape which
+    // corresponds to the desired Artefact Type.  To discover the required instance shape, it is necessary to GET each available
+    // shape and inspect it (eg., looking by name).
+    var instanceShapeURI = "https://greenfront.edinburgh.uk.ibm.com:9444/rdm/types/_6af28VcuEeaRs6jX1n_-EA";
+
+
+  var params = {};  
+  params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.TEXT;
+  
+  // This parameter indicates that RM proxy should pass on the SSO token
+    params[gadgets.io.RequestParameters.AUTHORIZATION]="SSO";
+    params[gadgets.io.RequestParameters.METHOD]=gadgets.io.MethodType.POST;
+    params[gadgets.io.RequestParameters.HEADERS] = {"OSLC-Core-Version":"2.0",
+                                                    "Content-Type": "application/rdf+xml"
+                                                   };
+    var content = "<rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'    xmlns:dcterms='http://purl.org/dc/terms/'    xmlns:oslc='http://open-services.net/ns/core#'    xmlns:oslc_rm='http://open-services.net/ns/rm#'    xmlns:jazz_rm='http://jazz.net/ns/rm#'   xmlns:xhtml='http://www.w3.org/1999/xhtml'>  <oslc_rm:Requirement rdf:about=''><dcterms:title rdf:parseType='Literal'> Signal frequency triggering</dcterms:title>        <jazz_rm:primaryText rdf:parseType='Literal'> <div xmlns='http://www.w3.org/1999/xhtml'>Signal frequency triggering <strong>shall</strong> be compliant with ISO-7488-II Part 4. </div></jazz_rm:primaryText><oslc:instanceShape rdf:resource='{instanceShapeURI}'/></oslc_rm:Requirement></rdf:RDF>";
+
+    content = content.replace(new RegExp("{instanceShapeURI}", "g"), instanceShapeURI);
+    params[gadgets.io.RequestParameters.POST_DATA] = content;
+
+  
+    var service = "https://greenfront.edinburgh.uk.ibm.com:9444/rdm/requirementFactory?projectURL=https%3A%2F%2Fgreenfront.edinburgh.uk.ibm.com%3A9444%2Frdm%2Fprocess%2Fproject-areas%2F_ut5BcFVjEeaRs6jX1n_-EA";
+    gadgets.io.makeRequest(service, oslcCreationHandler.bind(this,cb), params);
+    setStatus("Request to create via OSLC API has been sent to server", "oslc create running");
+}
 	
 // Subscribe to the selection event
 RM.Event.subscribe(RM.Event.ARTIFACT_SELECTED, handleSelection);
+$(function() {
+    $("#create").click(function() {
+        createArtefactUsingOSLCAPI(function(uri_of_new_artefact) {
+            setStatus("Create new artefact using the OSLC API", "done");
+            console.log("made new artefact");
+            $("#artefact").attr("href", uri_of_new_artefact);
+        });
+    });
+});
